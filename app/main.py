@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.backend.db import Base, engine
 from app.routers import category, products
 
 app = FastAPI()
@@ -9,3 +10,5 @@ async def welcome() -> dict:
 
 app.include_router(category.router)
 app.include_router(products.router)
+
+Base.metadata.create_all(bind=engine)

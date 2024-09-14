@@ -6,7 +6,7 @@ from app.backend.db import Base
 
 class Product(Base):
 
-    __tablename__ = 'Products'
+    __tablename__ = 'products'
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
@@ -19,7 +19,7 @@ class Product(Base):
     is_active = Column(Boolean, default=True)
 
     category_id = Column(Integer, ForeignKey('categories.id')) 
-    # на стороне получателя связи нужен импорт этой таблицы 
+    # на стороне получателя связи нужен импорт этой таблицы (модели)
     # пример:
     # category_id связан с Category, внутри файла, где описана таблица Category 
     # должен быть импорт from app.routers.products import Product

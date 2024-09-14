@@ -3,7 +3,7 @@ from sqlalchemy import String, Integer, Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-engine = create_engine('sqlite///grocery.db', echo=True)
+engine = create_engine('sqlite:///grocery.db', echo=True)
 SessionLocal = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 
 class User(Base):
 
-    __tablename__ = 'user' 
+    __tablename__ = 'users' 
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
