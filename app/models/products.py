@@ -16,7 +16,7 @@ class Product(Base):
     image_url = Column(String)
     stock = Column(Integer)
     rating = Column(Float)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)   
 
     category_id = Column(Integer, ForeignKey('categories.id')) 
     # на стороне получателя связи нужен импорт этой таблицы (модели)
