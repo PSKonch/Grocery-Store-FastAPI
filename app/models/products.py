@@ -25,5 +25,5 @@ class Product(Base):
     # должен быть импорт from app.routers.products import Product
     # На обратной стороне это не нужно, несмотря на relationship с указанием нужной нам таблицы
     
-    category = relationship('Category', back_populates='product')
+    category = relationship('Category', back_populates='products')
 
