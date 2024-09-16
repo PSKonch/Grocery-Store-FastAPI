@@ -5,7 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-engine = create_async_engine('postgresql+asyncpg://grocery:1234@localhost:5432/grocery', echo=True)
+engine = create_async_engine('postgresql+asyncpg://grocery:1234@127.0.0.1:5432/grocery', echo=True)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 class Base(DeclarativeBase):
