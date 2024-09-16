@@ -18,6 +18,8 @@ class Product(Base):
     rating = Column(Float)
     is_active = Column(Boolean, default=True)   
 
+    supplier_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+
     category_id = Column(Integer, ForeignKey('categories.id')) 
     # на стороне получателя связи нужен импорт этой таблицы (модели)
     # пример:
