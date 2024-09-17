@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert, update, delete
 from typing import Annotated
@@ -11,22 +11,37 @@ from app.backend.db_depends import get_db
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-security = HTTPBasic()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-async def get_current_username(db: Annotated[AsyncSession, Depends(get_db)], credential: HTTPBasicCredentials = Depends(security)):
-    user = await db.scalar(select(User).where(User.username == credential.username))
 
-    if not user or not bcrypt_context.verify(credential.password, user.hashed_password):
+async def auth_user(db: Annotated[AsyncSession, Depends(get_db)], username: str, password: str):
+
+    user = await db.scalar(select(User).where(User.username == username))
+    
+    if (not user) or (not user.is_active) or (not bcrypt_context.verify(password, user.hashed_password)):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_401_UNAUTHORIZED
         )
     
     return user
 
 
-@router.get('/users/me')
-async def read_current_user(user: dict = Depends(get_current_username)):
-    return {'user': user}
+@router.post('/token')
+async def login(db: Annotated[AsyncSession, Depends(get_db)], form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+
+    user = await auth_user(db, form_data.username, form_data.password)
+    
+    return {
+        'access_token': user.username,
+        'token_type': 'bearer'
+    }
+
+
+
+@router.get('/me')
+async def read_current_user(user: User = Depends(oauth2_scheme)):
+
+    return user
 
 
 @router.post('/')
