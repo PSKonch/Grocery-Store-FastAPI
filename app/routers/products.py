@@ -15,11 +15,12 @@ router = APIRouter(prefix='/products', tags=['products'])
 @router.get('/')
 async def get_all_products(db: Annotated[AsyncSession, Depends(get_db)]):
 
-    products = await db.scalars(select(Product).where(Product.is_active == False))
+    products = await db.scalars(select(Product).where(Product.is_active == True))
 
     return {
         'status': status.HTTP_200_OK,
-        'transaction': 'Succes'
+        'transaction': 'Succes',
+        'products': list(products)
     }
 
 
