@@ -5,7 +5,7 @@ from sqlalchemy import select, insert
 from typing import Annotated
 from passlib.context import CryptContext
 from jose import jwt, JWTError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app.models.user import User
 from app.schemas import CreateUser
@@ -30,7 +30,7 @@ async def create_access_token(username: str, user_id: int,
         'is_supplier': is_supplier, 
         'is_customer': is_customer
     }
-    expires = datetime.utcnow() + expire_delta
+    expires = datetime.now(timezone.utc) + expire_delta
     encode.update({'exp': expires})
 
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
